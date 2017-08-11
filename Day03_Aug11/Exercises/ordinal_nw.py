@@ -6,5 +6,5 @@ def ordinal(numb):
     numb=str(numb)
     end = {'1':'st', '2':'nd', '3':'rd'}
     if numb[-2:-1] == '1': return numb+'th'
-elif numb[-1] in endings.keys(): return numb+ endings[n[-1]]
+elif numb[-1] in endings.keys(): return numb+ endings[numb[-1]]
     else: return numb+'th'
