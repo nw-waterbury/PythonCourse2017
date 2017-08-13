@@ -1,4 +1,4 @@
-from random import *
+
 
 class Portfolio():
 	def __init__(self, treasury=0.00):
@@ -26,7 +26,7 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 
 	def addCash(self,amount):
 		self.treasury += amount
-		trans = 'Added $%s to the portfolio. Balance is: $%.f' % (amount, self.treasury)
+		trans = 'Added $%s to the portfolio. Balance is: $%.2f' % (amount, self.treasury)
 		self.track(trans)
 
 	def withdrawCash(self,amount):
@@ -34,32 +34,35 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 			print 'Not enough cash for this withdrawl.'
 		else:
 			self.treasury -= amount
-			trans = 'Withdrew $%s cash from the portfolio. Balance is: $%.f' % (amount, self.treasury)
+			trans = 'Withdrew $%s cash from the portfolio. Balance is: $%.2f' % (amount, self.treasury)
 			self.track(trans)
 
 	def buyStock(self,shares,stock_name):
+		if shares % 1 != 0:
+			print "Stocks must be bought as whole shares. We will round down for you."
 		if self.treasury < (float(stock_name.price)* int(shares)):
 			return "Insufficient funds for this purchase"
 		else:
 			self.ownedstock[stock_name.abbrev] = shares
 			self.stock[stock_name.abbrev] = stock_name.price
 			self.treasury -= (stock_name.price * (shares))
-			trans = "You bought %s shares of %s. Balance is: $%.f." %(shares, stock_name.abbrev, self.treasury)
+			trans = "You bought %s shares of %s. Balance is: $%.2f." %(shares, stock_name.abbrev, self.treasury)
 			self.track(trans)
 
-	def sellStock(self,shares,stock):
-		self.shares = int(shares)
-		sale = self.shares * (uniform(0.5,1.5) * stock.price)
-		if stock.abbrev in self.stock:
-			if shares <= self.stock[stock.abbrev]:
-				self.treasury += sale
-				self.stocks[stock.abbrev] -= self.shares
-				trans = 'Sold %s shares of %s stock.' % (self.shares, self.stock)
+
+	def sellStock(self,shares,stock_name):
+		if stock_name in self.ownedstock:
+			if shares <= self.ownedstock[stock_name]:
+				import random
+				price = (round(random.uniform(.5,1.5), 2) * self.stock[stock_name])
+				self.treasury += (price * shares)
+				self.ownedstock[stock_name] -= shares
+				trans="You sold %s shares of %s at %s. Balance is: $%.2f." %(shares, stock_name, price, self.treasury)
 				self.track(trans)
 			else:
-				print 'Insufficient shares. You own %s; you tried to sell %s.' % (self.stocks[stock.abbrev],self.shares)
+				return "Not enough shares of stock for this transaction."
 		else:
-			print 'You do not own any of this stock.'
+			return "Portfolio does not contain any of this stock."
 
 	def buyMutualFund(self,shares,fund):
 		cost = shares * 1
@@ -97,5 +100,4 @@ class MutualFund():
 	def __init__(self,abbrev):
 		self.price= 1
 		self.abbrev=abbrev
-		Portfolio.mf[abbrev] = 0
 		print 'Created the %s fund with share price: $%s.' % (self.abbrev,self.price)
