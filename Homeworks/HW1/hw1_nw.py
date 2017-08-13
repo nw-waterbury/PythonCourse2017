@@ -1,4 +1,4 @@
-
+import random
 
 class Portfolio():
 	def __init__(self, treasury=0.00):
@@ -20,7 +20,7 @@ class Portfolio():
 			print i
 
 	def __str__(self):
-		return """Current balance is: $%.f
+		return """Current balance is: $%.2f
 You own the following stocks:\n%s
 You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self.mf)
 
@@ -31,7 +31,7 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 
 	def withdrawCash(self,amount):
 		if self.treasury - amount < 0:
-			print 'Not enough cash for this withdrawl.'
+			return 'Not enough cash for this withdrawl.'
 		else:
 			self.treasury -= amount
 			trans = 'Withdrew $%s cash from the portfolio. Balance is: $%.2f' % (amount, self.treasury)
@@ -53,7 +53,6 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 	def sellStock(self,shares,stock_name):
 		if stock_name in self.ownedstock:
 			if shares <= self.ownedstock[stock_name]:
-				import random
 				price = (round(random.uniform(.5,1.5), 2) * self.stock[stock_name])
 				self.treasury += (price * shares)
 				self.ownedstock[stock_name] -= shares
@@ -74,20 +73,24 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 				trans="You bought %s shares of %s. Balance is: $ %.2f." %(shares, fund.abbrev, self.treasury)
 				self.track(trans)
 		else:
-			return "Mutual Funds must be bought as fractional shares. "
+			return "Mutual Funds must be bought as fractional shares."
 
 	def sellMutualFund(self,shares,fund):
-		sale = shares * (uniform(0.9,1.2))
-		if fund.abbrev in self.mf:
-			if shares <= self.mf[fund.abbrev]:
-				self.treasury += sale
-				self.mf[fund.abbrev] -= shares
-				x = 'Sold %s shares of the %s fund.' % (shares,fund)
-				self.track(x)
+		if type(shares)==float:
+			if fund in self.mf:
+				if shares <= self.mf[fund]:
+					self.mf[fund] = round((self.mf[fund] - shares), 2)
+					price = round(random.uniform(.9, 1.2), 2)
+					self.treasury = self.treasury + (price * shares)
+					trans = "You sold %s shares of %s at $ %s. You have now have $ %.2f." %(shares, fund, price, self.treasury)
+					self.track(trans)
+				else:
+					return "Insufficient shares for this transaction."
 			else:
-				print 'Insufficient shares. You own %s; you tried to sell %s.' % (funds[fund.abbrev],shares)
+				return "Portfolio does not contain any of this fund."
 		else:
-			print 'This fund does not exist, or you typed the variable incorrectly.'
+			return "Mutual Funds must be sold as fractional shares."
+
 
 
 
