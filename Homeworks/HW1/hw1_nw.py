@@ -65,14 +65,16 @@ You own the following mutual funds:\n%s""" % (self.treasury,self.ownedstock,self
 			return "Portfolio does not contain any of this stock."
 
 	def buyMutualFund(self,shares,fund):
-		cost = shares * 1
-		if self.treasury - cost >= 0:
-			self.treasury -= cost
-			self.mf[fund.abbrev] += shares
-			x = 'Purchased %s shares of the %s fund.' % (shares,fund)
-			self.track(x)
+		if type(shares)==float:
+			if self.treasury < shares:
+				return "Insufficient funds for this purchase."
+			else:
+				self.mf[fund.abbrev] = shares
+				self.treasury -= shares
+				trans="You bought %s shares of %s. Balance is: $ %.2f." %(shares, fund.abbrev, self.treasury)
+				self.track(trans)
 		else:
-			print 'Insufficient funds. Cash reserve at $%s, transaction requires $%s.' % (assets['cash'],cost)
+			return "Mutual Funds must be bought as fractional shares. "
 
 	def sellMutualFund(self,shares,fund):
 		sale = shares * (uniform(0.9,1.2))
