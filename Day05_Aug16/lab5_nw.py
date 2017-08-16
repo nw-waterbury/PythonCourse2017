@@ -33,6 +33,9 @@ print directions[0]['legs'][0]['distance']
 
 for step in directions[0]['legs'][0]['steps']:
 	print step['html_instructions']
+embassies= [[38.917228,-77.0522365], 
+	[38.9076502, -77.0370427],
+	[38.916944, -77.048739] ]
 
 def nearest_embassy(wh, embassy_list):
     e_dist = distances(wh, embassy_list)
@@ -56,7 +59,7 @@ def distances(wh, embassy_list):
 
 def address(embassy):
 	return gmaps.reverse_geocode(embassy)[0]['formatted_address']
-# if I wanted to hold a morning meeting there, which cafe would you suggest?
+
 def nearest_venue(wh, embassy_list, venue):
     near = nearest_embassy(wh, embassy_list)
     embassy = wh[near]
@@ -68,12 +71,11 @@ def nearest_venue(wh, embassy_list, venue):
         possibilities.append(latlong)
     near_venue = nearest_embassy(embassy, possibilities)
     venue_name=str(search[near_venue]['name'])
-    #venue_add=str(search[near_venue]['formatted_address'])
     return venue_name
 
-find_place(embassies)
+
 
 nearest_venue(whitehouse, embassies, 'cafe in DC')
-# if I wanted to hold an evening meeting there, which bar would you suggest?
+
 
 nearest_venue(whitehouse, embassies, 'bars in DC')
