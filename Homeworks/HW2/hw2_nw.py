@@ -12,6 +12,7 @@ from urlparse import *
 address = 'https://petitions.whitehouse.gov/petitions'
 
 def func_headers(website):
+	"""Takes a URL and returns a list of petition headers, issues, and support numbers """
 	headers = []
 	Tag_Lists = []
 	issue = []
@@ -36,6 +37,7 @@ def func_headers(website):
 	return headers, issue, signatures
 
 def func_titles(petitions):
+	"""Takes a list of petitions and returns a list of specific URLs and titles """
 	urls = []
 	titles = []
 	for petition in petitions:
@@ -49,6 +51,7 @@ def func_titles(petitions):
 	return urls, titles
 
 def pet_dates(urls):
+	"""Takes in URL list of petitions and returns list of dates of submission """
 	dates = []
 	for link in urls:
 		web_text = urllib2.urlopen(link)
@@ -60,16 +63,20 @@ def pet_dates(urls):
 	return dates
 
 def scrape_petitions(website):
+	"""Takes a URL and returns petiton title, dates, issue tag, and support numbers """
+	#Uses 3 functions detailed above
 	headers, issue, sigs = func_headers(website)
 	urls, titles = func_titles(headers)
 	dates = pet_dates(urls)
 	return titles, dates, issue, sigs
 
 def write_csv(website):
+		"""Creates a csv file for petitions and characteristics"""
 		with open('hw2_nw.csv', 'wb') as f:
 			writer = csv.DictWriter(f, fieldnames = ("PetitionTitle", "UploadDate", "IssueTags", "Signatures"))
 			writer.writeheader()
 			titles, dates, issue, sigs = scrape_petitions(website)
+			#Written row by row
 			for i in range(len(titles)):
 				writer.writerow({'PetitionTitle':titles[i], 'UploadDate': dates[i], 'IssueTags': issue[i], 'Signatures': sigs[i]})
 
