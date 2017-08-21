@@ -62,7 +62,7 @@ def more(population, kind, api):
 			except tweepy.TweepError:
 				print person
 				not_done = False
-	return endList
+	return extended_list
 
 def get_data(target):
 	"""Takes a target Twitter user's handle as a string and returns their most active follower, their most popular follower, their most active layman friend, their most active expert friend, their most active celebrity friend, the most active user of their followers and their followers' followers (excluding celebrities), and the most popular of their followers and their followers' followers (excluding celebrities)."""
