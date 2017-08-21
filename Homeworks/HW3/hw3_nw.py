@@ -3,23 +3,24 @@ import time
 
 def classify(user_id, api):
 	"""Given a Twitter user's handle, returns the user's classification as a layman, expert, or celebrity."""
-	if api.get_user(userID).followers_count > 1000: return 'celebrity'
-	if api.get_user(userID).followers_count >= 100: return 'expert'
+	if api.get_user(user_id).followers_count > 1000: return 'celebrity'
+	if api.get_user(user_id).followers_count >= 100: return 'expert'
 	return 'layman'
 def highest(users, kind, api):
 	"""Given a list of Twitter user IDs, returns the handle for the user with the highest value for the requested statistic."""
 	userDict = {}
 	for name in users:
-		done = False
-		while not_finished:
+		not_done = True
+		while not_done:
 			try:
 				tmp_user = api.get_user(name)
 				if kind == 'active': userDict[name] = tmp_user.statuses_count
 				if kind == 'popular': userDict[name] = tmp_user.followers_count
-				done = False
+				not_done = False
 			except tweepy.error.RateLimitError: time.sleep(1)
+			except tweepy.TweepError:
 				print name
-				done = False
+				not_done = False
 	return api.get_user(userDict.keys()[userDict.values().index(max(userDict.values()))]).screen_name.encode('utf-8')
 def active(users, api):
 	"""Given a list of Twitter user handles, returns the handle for the user with the most total Tweets."""
@@ -34,25 +35,25 @@ def getPeopleDict(user, kind, api):
 	if kind == 'friends': peopleDict = {'Celebrities':[],'Experts':[],'Laymen':[],'All':api.friends_ids(user.id)}
 	if kind == 'followers': peopleDict = {'Celebrities':[],'Experts':[],'Laymen':[],'All':api.followers_ids(user.id)}
 	for person in peopleDict['All']:
-		done = True
-		while not_finished:
+		not_done = True
+		while not_done:
 			try:
 				status = classify(person, api)
 				if status == 'celebrity': peopleDict['Celebrities'].append(person)
 				if status == 'expert': peopleDict['Experts'].append(person)
 				if status == 'layman': peopleDict['Laymen'].append(person)
-				done = False
+				not_done = False
 			except tweepy.RateLimitError: time.sleep(1)
 			except tweepy.TweepError:
 				print person
-				done = False
+				not_done = False
 	return peopleDict
 
 def more(population, kind, api):
 	extended_list = []
 	for person in (population['Laymen'] + population['Experts']):
 		not_done = True
-		while not_finished:
+		while not_done:
 			try:
 				if kind == 'friends': extended_list.extend(api.friends_ids(person))
 				if kind == 'followers': extended_list.extend(api.followers_ids(person))
