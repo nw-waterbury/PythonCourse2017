@@ -7,7 +7,7 @@ class LinkedList():
 
 	def length(self):
 		count = 1
-		start = self.head_node
+		start = self.head
 		while start.next != None:
 			count += 1
 			start = start.next
@@ -76,12 +76,14 @@ class LinkedList():
 	def __repr__(self):
 		return self.__str__()
 
-	class Node:
+	class Node():
 		def __init__(self, _value=None, _next=None):
-			  self.value=_value
-			  self.next=_next
+			self.value=_value
+			self.next=_next
 		def __str__(self):
-			  return str(self.value)
+			return str(self.value)
+		def __repr__(self):
+			return str(self.value)
 ###################################################################
 ###################################################################
 ###########################TEST###################################
@@ -90,17 +92,17 @@ class LinkedList():
 j=LinkedList(8)
 print j
 
-node_7 = l.addNode(7)
-node_5 = l.addNode(5)
+node_7 = j.addNode(7)
+node_5 = j.addNode(5)
 j
 
-node_6 = l.addNodeBefore(6, node_7)
-node_3 = l.addNodeAfter(3, node_5)
-node_0 = l.addNodeAfter(0, node_3)
-node_9 = l.addNodeAfter(9, node_0)
+node_6 = j.addNodeBefore(6, node_7)
+node_3 = j.addNodeAfter(3, node_5)
+node_0 = j.addNodeAfter(0, node_3)
+node_9 = j.addNodeAfter(9, node_0)
 print j
 
-j.remove(node_3)
+j.removeNode(node_3)
 j.removeNodesByValue(5)
 j
 
