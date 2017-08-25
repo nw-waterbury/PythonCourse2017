@@ -3,12 +3,15 @@ class LinkedList():
 	def __init__(self, value):
 		self.head = self.Node(value)
 		self.latest = self.head
-		self.nodes = 1
 		self.reverse = None
-		self.cycle = False
 
 	def length(self):
-		return self.nodes
+		count = 1
+		start = self.head_node
+		while start.next != None:
+			count += 1
+			start = start.next
+		return count
 
 	def addNodeAfter(self, new_value, after_node):
 		new_node=Node(new_value, after_node.next)
@@ -23,23 +26,35 @@ class LinkedList():
 		at_bat.next
 		return self.addNodeAfter(new_value, at_bat)
 
-	def reverse(self):
-		old_start=self.head
-		new_start=self.reverse
-		if old_start == None:
-			self.head=self.reverse
-			self.reverse=None
-			print "The list has been reversed"
-			return self
+	def addNodeBefore(self, new_value, before_node):
+		start = self.head
+		while start.next != before_node:
+			start = start.next
+		return self.addNodeAfter(new_value, start)
 
-	def __str__(self):
+	def removeNode(self, node_to_remove):
+		start = self.head
+		while start.next != node_to_remove:
+			start = start.next
+		start.next = node_to_remove.next
+
+	def removeNodesByValue(self, value):
+		start = self.head
+		while start.next != None:
+			if start.value == value:
+				self.removeNode(start)
+			start = start.next
+		if start.value == value:
+			self.removeNode(start)
+
+	#def __str__(self):
 
 	def __repr__(self):
 		return self.__str__()
 
-class Node:
-  	def __init__(self, _value=None, _next=None):
-	  	self.value=_value
-	  	self.next=_next
-	def __str__(self):
-	  	return str(self.value)
+	class Node:
+	  	def __init__(self, _value=None, _next=None):
+		  	self.value=_value
+		  	self.next=_next
+		def __str__(self):
+		  	return str(self.value)
