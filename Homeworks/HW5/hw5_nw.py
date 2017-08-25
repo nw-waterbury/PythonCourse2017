@@ -1,9 +1,8 @@
 class LinkedList():
 
 	def __init__(self, value):
-		self.head = self.Node(value)
-		self.latest = self.head
-		self.reverse = None
+		self.head = Node(value)
+
 
 	def length(self):
 		count = 1
@@ -48,22 +47,23 @@ class LinkedList():
 			self.removeNode(start)
 
 
-	def findNodeBefore(self, after_node, before = 'start'):
-		if before == 'start': before = self.start
+	def findNodeBefore(self, after_node, before = 'head'):
+		if before == 'head': before = self.head
 		if before.next == after_node: return before
 		return self.findNodeBefore(after_node, before.next)
 
 	def reverse(self):
-		leadoff = self.start
+		leadoff = self.head
 		while leadoff.next:
 			leadoff = leadoff.next
 		first = leadoff
-		while leadoff != self.start:
+		while leadoff != self.head:
 			leadoff.next = self.findNodeBefore(leadoff)
 			leadoff = leadoff.next
-		self.start.next = None
-		self.start = first
+		self.head.next = None
+		self.head = first
 		return self
+
 
 	def __str__(self):
 		node = self.head
@@ -76,35 +76,44 @@ class LinkedList():
 	def __repr__(self):
 		return self.__str__()
 
-	class Node():
-		def __init__(self, _value=None, _next=None):
-			self.value=_value
-			self.next=_next
-		def __str__(self):
-			return str(self.value)
-		def __repr__(self):
-			return str(self.value)
+
+class Node(object):
+	def __init__(self, _value=None, _next=None):
+		self.value=_value
+		self.next=_next
+	def __str__(self):
+		return str(self.value)
+	def __repr__(self):
+		return str(self.value)
 ###################################################################
 ###################################################################
-###########################TEST###################################
+###########################QUICK TESTS###################################
 ###################################################################
 ###################################################################
 j=LinkedList(8)
 print j
+#8
 
 node_7 = j.addNode(7)
 node_5 = j.addNode(5)
 j
+#8,7,5
 
 node_6 = j.addNodeBefore(6, node_7)
 node_3 = j.addNodeAfter(3, node_5)
 node_0 = j.addNodeAfter(0, node_3)
 node_9 = j.addNodeAfter(9, node_0)
 print j
+#8,6,7,5,3,0,9
 
 j.removeNode(node_3)
 j.removeNodesByValue(5)
 j
+#8,6,7,0,9
 
 j.reverse()
 print j
+#9,0,7,6,8
+
+j.length()
+#5
