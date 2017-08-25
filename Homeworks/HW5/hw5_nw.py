@@ -47,19 +47,23 @@ class LinkedList():
 		if start.value == value:
 			self.removeNode(start)
 
-	def findNode(self, value, check = 'start'):
-		if not check:
-			print "Can't find this node"
-			return None
-		if type(value) != int:
-			try:
-				 value=int(value)
-			except:
-				print "Invalid Input"
-				return None
-		if check == 'start': check = self.start
-		if value == check.value: return check
-		return self.findNode(value, check.next)
+
+	def findNodeBefore(self, after_node, before = 'start'):
+		if before == 'start': before = self.start
+		if before.next == after_node: return before
+		return self.findNodeBefore(after_node, before.next)
+
+	def reverse(self):
+		leadoff = self.start
+		while leadoff.next:
+			leadoff = leadoff.next
+		first = leadoff
+		while leadoff != self.start:
+			leadoff.next = self.findNodeBefore(leadoff)
+			leadoff = leadoff.next
+		self.start.next = None
+		self.start = first
+		return self
 
 	def __str__(self):
 		node = self.head
@@ -69,13 +73,36 @@ class LinkedList():
 			node = node.next
 		return result + ']'
 
-
 	def __repr__(self):
 		return self.__str__()
 
 	class Node:
-	  	def __init__(self, _value=None, _next=None):
-		  	self.value=_value
-		  	self.next=_next
+		def __init__(self, _value=None, _next=None):
+			  self.value=_value
+			  self.next=_next
 		def __str__(self):
-		  	return str(self.value)
+			  return str(self.value)
+###################################################################
+###################################################################
+###########################TEST###################################
+###################################################################
+###################################################################
+j=LinkedList(8)
+print j
+
+node_7 = l.addNode(7)
+node_5 = l.addNode(5)
+j
+
+node_6 = l.addNodeBefore(6, node_7)
+node_3 = l.addNodeAfter(3, node_5)
+node_0 = l.addNodeAfter(0, node_3)
+node_9 = l.addNodeAfter(9, node_0)
+print j
+
+j.remove(node_3)
+j.removeNodesByValue(5)
+j
+
+j.reverse()
+print j
