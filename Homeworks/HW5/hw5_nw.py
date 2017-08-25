@@ -47,7 +47,28 @@ class LinkedList():
 		if start.value == value:
 			self.removeNode(start)
 
-	#def __str__(self):
+	def findNode(self, value, check = 'start'):
+		if not check:
+			print "Can't find this node"
+			return None
+		if type(value) != int:
+			try:
+				 value=int(value)
+			except:
+				print "Invalid Input"
+				return None
+		if check == 'start': check = self.start
+		if value == check.value: return check
+		return self.findNode(value, check.next)
+
+	def __str__(self):
+		node = self.head
+		result = '['+str(node)
+		while node.next:
+			result += (', '+str(node.next))
+			node = node.next
+		return result + ']'
+
 
 	def __repr__(self):
 		return self.__str__()
